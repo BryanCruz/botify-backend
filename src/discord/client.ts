@@ -48,7 +48,7 @@ const connectToVoice = (message: Discord.Message) => {
 const disconnectFromVoice = (message: Discord.Message) => {
   const voiceChannel = getVoiceChannel(message);
 
-  delete voiceConnections[voiceChannel.id];
+  delete voiceConnections[message.guild.id];
   voiceChannel.leave();
 };
 
