@@ -2,8 +2,10 @@ import Discord from "discord.js";
 import config from "../config";
 
 type command = { command: string; params: string };
+type voiceConectionMap = { [guildId: string]: Discord.VoiceConnection };
 
 const client = new Discord.Client();
+const voiceConnections: voiceConectionMap = {};
 
 client.login(config.discordToken);
 
@@ -24,20 +26,29 @@ const getCommand = (message: Discord.Message): command | null => {
 };
 
 const getVoiceChannel = (message: Discord.Message): Discord.VoiceChannel => {
-  const authorGuildMember = message.author.presence.member;
+  const authorGuildMember = message.member;
   const voiceChannel = authorGuildMember.voice.channel;
 
   return voiceChannel;
 };
+
 const connectToVoice = (message: Discord.Message) => {
   const voiceChannel = getVoiceChannel(message);
 
-  voiceChannel.join();
+  voiceChannel
+    .join()
+    .then((connection) => {
+      voiceConnections[voiceChannel.guild.id] = connection;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 };
 
 const disconnectFromVoice = (message: Discord.Message) => {
   const voiceChannel = getVoiceChannel(message);
 
+  delete voiceConnections[voiceChannel.id];
   voiceChannel.leave();
 };
 
