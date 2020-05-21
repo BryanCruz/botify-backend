@@ -85,7 +85,7 @@ client.on("message", (message) => {
     disconnectFromVoice(message);
   }
 
-  if (command === "play") {
+  if (command === "p" || command === "play") {
     playSomething(message, params);
   }
 });
