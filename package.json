@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "ts-node src/index",
+    "start:dev": "nodemon",
     "test": "jest --coverage --watchAll --notify"
   },
   "repository": {
@@ -18,12 +19,16 @@
   "license": "MIT",
   "homepage": "https://github.com/bryancruz/botify-backend",
   "devDependencies": {
+    "@types/express": "^4.17.6",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.2",
     "jest": "^24.9.0",
+    "nodemon": "^2.0.4",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.4.1",
     "typescript": "^3.5.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }

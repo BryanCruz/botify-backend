@@ -1,5 +1,12 @@
-export const main = () => {
-  console.log("Hello World");
-};
+import express from "express";
 
-main();
+const appPort = 3000;
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
+
+app.listen(appPort, () => {
+  console.log(`Server is running in http://localhost:${appPort}`);
+});
