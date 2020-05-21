@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import config from "../config";
+import { Readable } from "stream";
 
 type command = { command: string; params: string };
 type voiceConectionMap = { [guildId: string]: Discord.VoiceConnection };
@@ -52,7 +53,20 @@ const disconnectFromVoice = (message: Discord.Message) => {
   voiceChannel.leave();
 };
 
-const playSomething = async (message: Discord.Message, nameToPlay: string) => {
+const playAudio = async (
+  message: Discord.Message,
+  audio: Discord.VoiceBroadcast | Readable | string
+) => {
+  const guildId = message.guild.id;
+  if (!voiceConnections[guildId]) {
+    await connectToVoice(message);
+  }
+
+  const connection = voiceConnections[guildId];
+  connection.play(audio, { volume: 0.4 });
+};
+
+const playSavedAudio = async (message: Discord.Message, nameToPlay: string) => {
   const foundAudio = config.audio.find((audio) =>
     audio.aliases.find((alias) => alias === nameToPlay)
   );
@@ -61,13 +75,7 @@ const playSomething = async (message: Discord.Message, nameToPlay: string) => {
     return;
   }
 
-  const guildId = message.guild.id;
-  if (!voiceConnections[guildId]) {
-    await connectToVoice(message);
-  }
-
-  const connection = voiceConnections[guildId];
-  connection.play(`./src/audio/${foundAudio.name}.mp3`, { volume: 0.4 });
+  playAudio(message, `./src/audio/${foundAudio.name}.mp3`);
 };
 
 client.on("message", (message) => {
@@ -86,7 +94,7 @@ client.on("message", (message) => {
   }
 
   if (command === "m" || command === "meme") {
-    playSomething(message, params);
+    playSavedAudio(message, params);
   }
 });
 
