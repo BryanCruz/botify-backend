@@ -67,7 +67,7 @@ const playSomething = async (message: Discord.Message, nameToPlay: string) => {
   }
 
   const connection = voiceConnections[guildId];
-  connection.play(`./audio/${foundAudio.name}.mp3`, { volume: 0.4 });
+  connection.play(`./src/audio/${foundAudio.name}.mp3`, { volume: 0.4 });
 };
 
 client.on("message", (message) => {

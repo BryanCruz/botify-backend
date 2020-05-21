@@ -1,12 +1,10 @@
-import audioConfig from "./audio/config.json";
+import fs from "fs";
 
 type audioConfig = Array<{ name: string; aliases: string[] }>;
-const audio = (audioConfig as audioConfig) || [
-  {
-    name: "sample",
-    aliases: ["sample", "samp", "s"],
-  },
-];
+
+const audio: audioConfig = JSON.parse(
+  fs.readFileSync("./src/audio/config.json").toString()
+);
 
 export default {
   discordToken: process.env.DISCORD_TOKEN,
