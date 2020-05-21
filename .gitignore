@@ -1,0 +1,11 @@
+# package directories
+node_modules
+
+# Build directories
+dist
+
+# Test outputs
+coverage
+
+#Logs
+*.log
