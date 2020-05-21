@@ -13,3 +13,4 @@ coverage
 # Other
 .env
 launch.json
+audio

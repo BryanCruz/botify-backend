@@ -35,7 +35,7 @@ const getVoiceChannel = (message: Discord.Message): Discord.VoiceChannel => {
 const connectToVoice = (message: Discord.Message) => {
   const voiceChannel = getVoiceChannel(message);
 
-  voiceChannel
+  return voiceChannel
     .join()
     .then((connection) => {
       voiceConnections[voiceChannel.guild.id] = connection;
@@ -52,6 +52,24 @@ const disconnectFromVoice = (message: Discord.Message) => {
   voiceChannel.leave();
 };
 
+const playSomething = async (message: Discord.Message, nameToPlay: string) => {
+  const foundAudio = config.audio.find((audio) =>
+    audio.aliases.find((alias) => alias === nameToPlay)
+  );
+
+  if (!foundAudio) {
+    return;
+  }
+
+  const guildId = message.guild.id;
+  if (!voiceConnections[guildId]) {
+    await connectToVoice(message);
+  }
+
+  const connection = voiceConnections[guildId];
+  connection.play(`./audio/${foundAudio.name}.mp3`, { volume: 0.4 });
+};
+
 client.on("message", (message) => {
   const { command, params } = getCommand(message);
 
@@ -65,6 +83,10 @@ client.on("message", (message) => {
 
   if (command === "leave") {
     disconnectFromVoice(message);
+  }
+
+  if (command === "play") {
+    playSomething(message, params);
   }
 });
 
