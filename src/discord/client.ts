@@ -6,10 +6,7 @@ const client = new Discord.Client();
 client.login(config.discordToken);
 
 const getCommand = (message: Discord.Message): string | null => {
-  if (
-    message.author.tag === client.user.tag ||
-    message.channel.type !== "text"
-  ) {
+  if (message.author.bot || message.channel.type !== "text") {
     return null;
   }
 
