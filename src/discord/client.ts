@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import config from "../config";
 import { Readable } from "stream";
+import ytdl from "ytdl-core";
 
 type command = { command: string; params: string };
 type voiceConectionMap = { [guildId: string]: Discord.VoiceConnection };
@@ -78,6 +79,17 @@ const playSavedAudio = async (message: Discord.Message, nameToPlay: string) => {
   playAudio(message, `./src/audio/${foundAudio.name}.mp3`);
 };
 
+const playYoutubeAudio = async (
+  message: Discord.Message,
+  whatToPlay: string
+) => {
+  const ytRegex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
+  const ytMatch = whatToPlay.match(ytRegex);
+  if (ytMatch) {
+    playAudio(message, ytdl(`https://www.youtube.com/watch?v=${ytMatch[1]}`));
+  }
+};
+
 client.on("message", (message) => {
   const { command, params } = getCommand(message);
 
@@ -95,6 +107,10 @@ client.on("message", (message) => {
 
   if (command === "m" || command === "meme") {
     playSavedAudio(message, params);
+  }
+
+  if (command === "p" || command === "play") {
+    playYoutubeAudio(message, params);
   }
 });
 
