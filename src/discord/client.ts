@@ -27,7 +27,14 @@ const audioQueues: audioQueueMap = {};
 
 client.login(config.discordToken);
 
-const getCommand = (message: Discord.Message): command | null => {
+const findCommand = (commandToFind: string) =>
+  commands.find(
+    (commandConfig) =>
+      commandConfig.name === commandToFind ||
+      commandConfig.aliases.find((alias) => alias === commandToFind)
+  );
+
+const getCommandAndParams = (message: Discord.Message): command | null => {
   const emptyCommand: command = { command: null, params: null };
 
   if (message.author.bot || message.channel.type !== "text") {
@@ -43,7 +50,23 @@ const getCommand = (message: Discord.Message): command | null => {
   return { command: regexTest[1].toLowerCase(), params: regexTest[2].trim() };
 };
 
-const showHelp = (message: Discord.Message) => {};
+const showHelp = (message: Discord.Message, params: string) => {
+  const textChannel = message.channel;
+
+  if (params === "") {
+    const helpMessages = commands
+      .map((command) => {
+        const aliasesHelp =
+          command.aliases.length > 0 ? `(${command.aliases.join(",")})` : "";
+
+        return `- ${command.name}${aliasesHelp}: ${command.description}`;
+      })
+      .join("\n");
+
+    textChannel.send(`\`\`\`\n${helpMessages}\n\`\`\``);
+    return;
+  }
+};
 
 const getVoiceChannel = (message: Discord.Message): Discord.VoiceChannel => {
   const authorGuildMember = message.member;
@@ -249,17 +272,8 @@ const commands: commandConfig[] = [
 ];
 
 client.on("message", (message) => {
-  const { command, params } = getCommand(message);
-
-  if (!command) {
-    return;
-  }
-
-  const commandToCall = commands.find(
-    (commandConfig) =>
-      commandConfig.name === command ||
-      commandConfig.aliases.find((alias) => alias === command)
-  );
+  const { command, params } = getCommandAndParams(message);
+  const commandToCall = findCommand(command);
 
   if (!commandToCall) {
     return;
