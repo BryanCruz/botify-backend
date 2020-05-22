@@ -60,7 +60,10 @@ const connectToVoice = (message: Discord.Message) => {
 const disconnectFromVoice = (message: Discord.Message) => {
   const voiceChannel = getVoiceChannel(message);
 
-  delete voiceConnections[message.guild.id];
+  const guildId = message.guild.id;
+  delete voiceConnections[guildId];
+  delete audioQueues[guildId];
+
   voiceChannel.leave();
 };
 
