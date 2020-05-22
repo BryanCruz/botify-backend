@@ -1,6 +1,10 @@
 import fs from "fs";
 
-type audioConfig = Array<{ name: string; aliases: string[] }>;
+type audioConfig = Array<{
+  name: string;
+  aliases: string[];
+  description: string;
+}>;
 
 const audio: audioConfig = JSON.parse(
   fs.readFileSync("./src/audio/config.json").toString()

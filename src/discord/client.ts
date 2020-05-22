@@ -80,7 +80,17 @@ const showHelp = (message: Discord.Message, params: string) => {
     return;
   }
 
-  textChannel.send(involveText(buildCommandHelp(commandToGetHelp)));
+  let helpMessage = buildCommandHelp(commandToGetHelp);
+  if (commandToGetHelp.name === "meme") {
+    helpMessage = helpMessage.concat(
+      "\n\nList:\n",
+      config.audio
+        .map((audio) => `- ${audio.description}: ${audio.aliases.join(", ")}`)
+        .join("\n")
+    );
+  }
+
+  textChannel.send(involveText(helpMessage));
 };
 
 const getVoiceChannel = (message: Discord.Message): Discord.VoiceChannel => {
