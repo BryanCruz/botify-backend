@@ -53,13 +53,17 @@ const getCommandAndParams = (message: Discord.Message): command | null => {
 const showHelp = (message: Discord.Message, params: string) => {
   const textChannel = message.channel;
 
+  const buildCommandHelp = (command: commandConfig): string => {
+    const aliasesHelp =
+      command.aliases.length > 0 ? `(${command.aliases.join(",")})` : "";
+
+    return `${command.name}${aliasesHelp}: ${command.description}`;
+  };
+
   if (params === "") {
     const helpMessages = commands
       .map((command) => {
-        const aliasesHelp =
-          command.aliases.length > 0 ? `(${command.aliases.join(",")})` : "";
-
-        return `- ${command.name}${aliasesHelp}: ${command.description}`;
+        return `- ${buildCommandHelp(command)}`;
       })
       .join("\n");
 
