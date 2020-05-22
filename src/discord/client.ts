@@ -8,6 +8,7 @@ type commandConfig = {
   name: string;
   aliases: string[];
   description: string;
+  usage: string;
   function: any;
 };
 type voiceConectionMap = { [guildId: string]: Discord.VoiceConnection };
@@ -57,10 +58,10 @@ const showHelp = (message: Discord.Message, params: string) => {
     const aliasesHelp =
       command.aliases.length > 0 ? `(${command.aliases.join(",")})` : "";
 
-    return `${command.name}${aliasesHelp}: ${command.description}`;
+    return `${command.name}${aliasesHelp}: ${command.description}.\n  Usage: \`${command.usage}\``;
   };
 
-  const involveText = (text: string): string => `\`\`\`${text}\`\`\``;
+  const involveText = (text: string): string => `\`\`\`\n${text}\n\`\`\``;
 
   if (params === "") {
     const helpMessages = commands
@@ -239,48 +240,56 @@ const commands: commandConfig[] = [
     aliases: ["h"],
     description:
       "Show help message. To see help for a specific command, use `$help <command>`",
+    usage: "help [command]",
     function: showHelp,
   },
   {
     name: "invoke",
     aliases: [],
     description: "Invoke bot to user current voice channel",
+    usage: "invoke",
     function: connectToVoice,
   },
   {
     name: "leave",
     aliases: [],
     description: "Leave bot from his current voice channel",
+    usage: "leave",
     function: disconnectFromVoice,
   },
   {
     name: "meme",
     aliases: ["m"],
     description: "Play a meme",
+    usage: "meme <name>",
     function: playSavedAudio,
   },
   {
     name: "play",
     aliases: ["p"],
     description: "Play a Youtube audio",
+    usage: "play <youtube_link>",
     function: playYoutubeAudio,
   },
   {
     name: "pause",
     aliases: [],
     description: "Pause current audio",
+    usage: "pause",
     function: pauseAudio,
   },
   {
     name: "resume",
     aliases: [],
     description: "Resume current audio",
+    usage: "resume",
     function: resumeAudio,
   },
   {
     name: "skip",
     aliases: ["s"],
     description: "Skip current audio",
+    usage: "skip",
     function: skipAudio,
   },
 ];
