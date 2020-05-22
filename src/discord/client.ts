@@ -66,6 +66,11 @@ const showHelp = (message: Discord.Message, params: string) => {
     textChannel.send(`\`\`\`\n${helpMessages}\n\`\`\``);
     return;
   }
+
+  const commandToGetHelp = findCommand(params);
+  if (!commandToGetHelp) {
+    textChannel.send("```Comando não encontrado```");
+  }
 };
 
 const getVoiceChannel = (message: Discord.Message): Discord.VoiceChannel => {
