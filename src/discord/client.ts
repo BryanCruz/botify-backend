@@ -135,7 +135,6 @@ const playAudio = async (
   const connection = voiceConnections[guildId];
   const streamDispatcher = connection.play(audio, {
     volume: 0.4,
-    bitrate: "auto",
   });
 
   return streamDispatcher;
@@ -239,7 +238,10 @@ const playYoutubeAudio = async (
   if (ytMatch) {
     enqueueAudio(
       message,
-      ytdl(`https://www.youtube.com/watch?v=${ytMatch[1]}`)
+      ytdl(`https://www.youtube.com/watch?v=${ytMatch[1]}`, {
+        filter: "audioonly",
+        highWaterMark: 1 << 27, // 120mb
+      })
     );
   }
 };
