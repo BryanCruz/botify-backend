@@ -151,6 +151,18 @@ const resumeAudio = (message: Discord.Message) => {
   currentAudioDetails.streamDispatcher.resume();
 };
 
+const skipAudio = (message: Discord.Message) => {
+  const currentAudioDetails = audioQueues[message.guild.id][0];
+
+  if (!currentAudioDetails) {
+    return;
+  }
+
+  pauseAudio(message);
+  audioQueues[message.guild.id].shift();
+  dequeueAudio(message);
+};
+
 const playSavedAudio = async (message: Discord.Message, nameToPlay: string) => {
   const foundAudio = config.audio.find((audio) =>
     audio.aliases.find((alias) => alias === nameToPlay)
@@ -206,6 +218,10 @@ client.on("message", (message) => {
 
   if (command === "resume") {
     resumeAudio(message);
+  }
+
+  if (command === "s" || command === "skip") {
+    skipAudio(message);
   }
 });
 
