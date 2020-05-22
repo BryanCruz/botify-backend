@@ -76,6 +76,7 @@ const showHelp = (message: Discord.Message, params: string) => {
   const commandToGetHelp = findCommand(params);
   if (!commandToGetHelp) {
     textChannel.send("```Comando não encontrado```");
+    return;
   }
 
   textChannel.send(involveText(buildCommandHelp(commandToGetHelp)));
