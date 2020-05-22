@@ -4,6 +4,12 @@ import { Readable } from "stream";
 import ytdl from "ytdl-core";
 
 type command = { command: string; params: string };
+type commandConfig = {
+  name: string;
+  aliases: string[];
+  description: string;
+  function: any;
+};
 type voiceConectionMap = { [guildId: string]: Discord.VoiceConnection };
 type acceptedAudioType = Discord.VoiceBroadcast | Readable | string;
 type audioQueue = Array<{
@@ -36,6 +42,8 @@ const getCommand = (message: Discord.Message): command | null => {
 
   return { command: regexTest[1].toLowerCase(), params: regexTest[2].trim() };
 };
+
+const showHelp = (message: Discord.Message) => {};
 
 const getVoiceChannel = (message: Discord.Message): Discord.VoiceChannel => {
   const authorGuildMember = message.member;
@@ -189,6 +197,58 @@ const playYoutubeAudio = async (
   }
 };
 
+const commands: commandConfig[] = [
+  {
+    name: "help",
+    aliases: ["h"],
+    description:
+      "Show help message. To see help for a specific command, use `$help <command>`",
+    function: showHelp,
+  },
+  {
+    name: "invoke",
+    aliases: [],
+    description: "Invoke bot to user current voice channel",
+    function: connectToVoice,
+  },
+  {
+    name: "leave",
+    aliases: [],
+    description: "Leave bot from his current voice channel",
+    function: disconnectFromVoice,
+  },
+  {
+    name: "meme",
+    aliases: ["m"],
+    description: "Play a meme",
+    function: playSavedAudio,
+  },
+  {
+    name: "play",
+    aliases: ["p"],
+    description: "Play a Youtube audio",
+    function: playYoutubeAudio,
+  },
+  {
+    name: "pause",
+    aliases: [],
+    description: "Pause current audio",
+    function: pauseAudio,
+  },
+  {
+    name: "resume",
+    aliases: [],
+    description: "Resume current audio",
+    function: resumeAudio,
+  },
+  {
+    name: "skip",
+    aliases: ["s"],
+    description: "Skip current audio",
+    function: skipAudio,
+  },
+];
+
 client.on("message", (message) => {
   const { command, params } = getCommand(message);
 
@@ -196,33 +256,17 @@ client.on("message", (message) => {
     return;
   }
 
-  if (command === "invoke") {
-    connectToVoice(message);
+  const commandToCall = commands.find(
+    (commandConfig) =>
+      commandConfig.name === command ||
+      commandConfig.aliases.find((alias) => alias === command)
+  );
+
+  if (!commandToCall) {
+    return;
   }
 
-  if (command === "leave" || command === "clear") {
-    disconnectFromVoice(message);
-  }
-
-  if (command === "m" || command === "meme") {
-    playSavedAudio(message, params);
-  }
-
-  if (command === "p" || command === "play") {
-    playYoutubeAudio(message, params);
-  }
-
-  if (command === "pause") {
-    pauseAudio(message);
-  }
-
-  if (command === "resume") {
-    resumeAudio(message);
-  }
-
-  if (command === "s" || command === "skip") {
-    skipAudio(message);
-  }
+  commandToCall.function(message, params);
 });
 
 export default client;
