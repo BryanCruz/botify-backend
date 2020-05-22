@@ -160,9 +160,8 @@ const resumeAudio = (message: Discord.Message) => {
 };
 
 const skipAudio = (message: Discord.Message) => {
-  const currentAudioDetails = audioQueues[message.guild.id][0];
-
-  if (!currentAudioDetails) {
+  const audioQueue = audioQueues[message.guild.id];
+  if (!audioQueue || !audioQueue[0]) {
     return;
   }
 
