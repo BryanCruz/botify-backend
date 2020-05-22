@@ -77,7 +77,10 @@ const playAudio = async (
   }
 
   const connection = voiceConnections[guildId];
-  const streamDispatcher = connection.play(audio, { volume: 0.4 });
+  const streamDispatcher = connection.play(audio, {
+    volume: 0.4,
+    bitrate: "auto",
+  });
 
   return streamDispatcher;
 };
