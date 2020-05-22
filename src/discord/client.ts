@@ -60,6 +60,8 @@ const showHelp = (message: Discord.Message, params: string) => {
     return `${command.name}${aliasesHelp}: ${command.description}`;
   };
 
+  const involveText = (text: string): string => `\`\`\`${text}\`\`\``;
+
   if (params === "") {
     const helpMessages = commands
       .map((command) => {
@@ -67,7 +69,7 @@ const showHelp = (message: Discord.Message, params: string) => {
       })
       .join("\n");
 
-    textChannel.send(`\`\`\`\n${helpMessages}\n\`\`\``);
+    textChannel.send(involveText(helpMessages));
     return;
   }
 
