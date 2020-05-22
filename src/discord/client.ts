@@ -188,7 +188,7 @@ client.on("message", (message) => {
     connectToVoice(message);
   }
 
-  if (command === "leave") {
+  if (command === "leave" || command === "clear") {
     disconnectFromVoice(message);
   }
 
