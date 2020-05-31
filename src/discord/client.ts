@@ -233,11 +233,15 @@ const playYoutubeAudio = async (
   message: Discord.Message,
   whatToPlay: string
 ) => {
-  const audioToQueue = await getYoutubeAudio(whatToPlay);
-
-  if (audioToQueue) {
-    enqueueAudio(message, audioToQueue);
+  const result = await getYoutubeAudio(whatToPlay);
+  if (!result) {
+    return;
   }
+
+  const { audio, url } = result;
+
+  enqueueAudio(message, audio);
+  message.channel.send(`Queued video: ${url}`);
 };
 
 const commands: commandConfig[] = [
