@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import config from "../config";
 import { Readable } from "stream";
-import ytdl from "ytdl-core";
+import { getYoutubeAudio } from "../youtube";
 
 type command = { command: string; params: string };
 type commandConfig = {
@@ -42,7 +42,7 @@ const getCommandAndParams = (message: Discord.Message): command | null => {
     return emptyCommand;
   }
 
-  const regexTest = message.content.match(/\$ *([a-zA-Z]*)(.*)/);
+  const regexTest = message.content.match(/\$\$ *([a-zA-Z]*)(.*)/);
 
   if (!regexTest) {
     return emptyCommand;
@@ -233,16 +233,10 @@ const playYoutubeAudio = async (
   message: Discord.Message,
   whatToPlay: string
 ) => {
-  const ytRegex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
-  const ytMatch = whatToPlay.match(ytRegex);
-  if (ytMatch) {
-    enqueueAudio(
-      message,
-      ytdl(`https://www.youtube.com/watch?v=${ytMatch[1]}`, {
-        filter: "audioonly",
-        highWaterMark: 1 << 27, // 120mb
-      })
-    );
+  const audioToQueue = getYoutubeAudio(whatToPlay);
+
+  if (audioToQueue) {
+    enqueueAudio(message, audioToQueue);
   }
 };
 
@@ -280,7 +274,7 @@ const commands: commandConfig[] = [
     name: "play",
     aliases: ["p"],
     description: "Play a Youtube audio",
-    usage: "play <youtube_link>",
+    usage: "play <youtube_link | youtube_search>",
     function: playYoutubeAudio,
   },
   {
