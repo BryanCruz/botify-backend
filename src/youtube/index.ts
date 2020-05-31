@@ -51,7 +51,7 @@ const downloadVideo = (videoId: string) => {
     url,
     audio: ytdl(url, {
       filter: "audioonly",
-      highWaterMark: 1 << 27, // 120mb
+      highWaterMark: 1 << 23, // 8mb
     }),
   };
 };
