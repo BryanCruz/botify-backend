@@ -233,7 +233,7 @@ const playYoutubeAudio = async (
   message: Discord.Message,
   whatToPlay: string
 ) => {
-  const audioToQueue = getYoutubeAudio(whatToPlay);
+  const audioToQueue = await getYoutubeAudio(whatToPlay);
 
   if (audioToQueue) {
     enqueueAudio(message, audioToQueue);

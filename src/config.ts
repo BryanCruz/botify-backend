@@ -12,6 +12,7 @@ const audio: audioConfig = JSON.parse(
 
 export default {
   discordToken: process.env.DISCORD_TOKEN,
+  youtubeToken: process.env.YOUTUBE_TOKEN,
   apiPort: 3000,
   audio,
 };
