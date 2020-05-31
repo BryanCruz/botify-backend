@@ -42,7 +42,7 @@ const getCommandAndParams = (message: Discord.Message): command | null => {
     return emptyCommand;
   }
 
-  const regexTest = message.content.match(/\$\$ *([a-zA-Z]*)(.*)/);
+  const regexTest = message.content.match(/\$ *([a-zA-Z]*)(.*)/);
 
   if (!regexTest) {
     return emptyCommand;
